@@ -1,0 +1,68 @@
+<% layout("/layouts/boilerplate") %>
+<div class="row mt-3">
+    <div class="col-8 offset-2"> 
+        <h3>Create New Listings</h3>
+        <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input name="listing[title]" placeholder="enter title" type="text" class="form-control" required/>
+                <div class="invalid-feedback">The title should be mandatory</div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="listing[description]" type="text" class="form-control" required></textarea>
+                <div class="invalid-feedback">Please enter a short Description</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="image" class="form-label">Upload Listing Image</label>
+                <input name="listing[image]"  type="file" class="form-control" required/>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="price" class="form-label">Price</label>
+                    <input name="listing[price]" placeholder="enter price"  class="form-control" required />
+                    <div class="invalid-feedback">Price should be valid</div>
+                </div>
+                <div class="mb-3 col-md-8">
+                    <label for="country" class="form-label">Country</label>
+                    <input name="listing[country]" placeholder="enter country" type="text" class="form-control" required/>
+                    <div class="invalid-feedback">Country name should be valid</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input name="listing[location]" id="location-input" placeholder="enter location" type="text" class="form-control" required/>
+                <div class="invalid-feedback">Location should be valid</div>
+            </div>
+
+            <!-- Leaflet Map for picking location -->
+            <div id="map" style="height: 400px;" class="mb-3"></div>
+
+            <button class="btn btn-dark add-btn mt-3 mb-2">Add</button>
+        </form>
+    </div>
+</div>
+
+<!-- Leaflet JS and CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    // Initialize map
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // When user clicks on map, update input field
+    map.on('click', function(e) {
+        if(marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById('location-input').value = e.latlng.lat + ', ' + e.latlng.lng;
+    });
+</script>
