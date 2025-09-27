@@ -1,7 +1,7 @@
 if(process.env.NODE_ENV != "production"){
     require('dotenv').config({ silent: true });
 }
-const express = require("express");
+const express = requirconste("express");
 const app = express();
 const port = 8080;
 const mongoose = require("mongoose");
@@ -23,7 +23,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+//  MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 const dburl = process.env.ATLASDB_URL;
 
 
@@ -34,7 +34,7 @@ main().then(() => {
 });
 
 async function main() {
-    await mongoose.connect(dburl);
+    await mongoose.connect(dburl);//dburl
 }
 
 app.set("view engine", "ejs");
@@ -45,7 +45,7 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 const store = MongoStore.create({
-    mongoUrl: dburl,
+    mongoUrl: dburl,//dburl
     crypto:{
         secret:process.env.SECERT,
     },
@@ -96,6 +96,11 @@ app.use("/listings", listingRouter);
 // Note: Review routes are mounted to /listings/:id/reviews
 app.use("/listings/:id/reviews", reviewRouter); 
 app.use("/", userRouter);
+
+//Redirect root to /listings
+app.get("/", (req,res) => {
+    res.redirect("/listings");
+});
 
 // Error Handling Routes
 app.all("*", (req, res, next) => {
